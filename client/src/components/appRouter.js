@@ -5,7 +5,6 @@ import User from "./user/user";
 import Admin from "./admin/admin";
 
 class AppRouter extends Component {
-  state = {};
   render() {
     const routes = (
       <React.Fragment>

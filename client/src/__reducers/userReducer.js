@@ -52,10 +52,13 @@ export default function(state = initialState, action) {
         currentQuestion: state.currentQuestion + action.payload.value
       };
     case SET_USER_ANSWER:
+      console.log(action.payload.other);
       return produce(state, draftState => {
         draftState.currentPoll.questions[
           action.payload.currentQuestion
         ].answer = action.payload.value;
+        draftState.currentPoll.questions[action.payload.currentQuestion].other =
+          action.payload.other;
       });
     case CLEAR_STATE:
       return {

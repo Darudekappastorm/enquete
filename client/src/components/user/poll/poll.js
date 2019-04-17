@@ -50,11 +50,21 @@ class Poll extends Component {
     this.props.setCurrentQuestion({ value: data });
   };
 
-  setUserAnswer = (e, currentQuestion) => {
+  setUserAnswer = (e, currentQuestion, other) => {
     const value = e.target.value;
+
+    if (value === "Other...") {
+      this.props.setUserAnswer({
+        value: "",
+        other: other,
+        currentQuestion: currentQuestion
+      });
+      return;
+    }
 
     this.props.setUserAnswer({
       value: value,
+      other: other,
       currentQuestion: currentQuestion
     });
   };
@@ -73,15 +83,12 @@ class Poll extends Component {
     this.props.savePoll(sanitize);
   };
 
-  setOtherAnswer = () => {
-    console.log("Add inputfield");
-  };
-
   render() {
     const { classes } = this.props;
     const { currentPoll, currentQuestion } = this.props.user;
     const { questions, totalQuestions } = currentPoll;
     const userAnswer = questions[currentQuestion].answer;
+
     let answer;
     let buttons = [];
 
@@ -142,20 +149,39 @@ class Poll extends Component {
             }
             label={value.value}
             labelPlacement="end"
-            onClick={e => this.setUserAnswer(e, currentQuestion)}
+            onClick={e => this.setUserAnswer(e, currentQuestion, false)}
           />
         );
       });
 
-      content.push(
+      content.push([
         <FormControlLabel
           value="Other..."
-          control={<Radio color="primary" />}
+          control={
+            <Radio
+              color="primary"
+              checked={questions[currentQuestion].other === true ? true : false}
+            />
+          }
           label="Other..."
           labelPlacement="end"
-          onClick={e => this.setOtherAnswer()}
+          onClick={e => {
+            this.setUserAnswer(e, currentQuestion, true);
+          }}
+        />,
+        <TextField
+          id="standard-name"
+          className={classes.textField}
+          margin="normal"
+          autoComplete="off"
+          value={userAnswer}
+          onChange={e => this.setUserAnswer(e, currentQuestion, true)}
+          multiline={true}
+          style={{
+            display: questions[currentQuestion].other === true ? "" : "none"
+          }}
         />
-      );
+      ]);
     } else {
       answer = (
         <TextField
@@ -165,7 +191,7 @@ class Poll extends Component {
           margin="normal"
           autoComplete="off"
           value={userAnswer}
-          onChange={e => this.setUserAnswer(e, currentQuestion)}
+          onChange={e => this.setUserAnswer(e, currentQuestion, false)}
           multiline={true}
         />
       );

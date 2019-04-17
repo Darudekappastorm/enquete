@@ -25,7 +25,7 @@ module.exports = async function(Authentication, req, res) {
       }
 
       return res.status(200).send(result);
-    });
+    }).sort({ date: "desc" });
   } catch (ex) {
     return res.status(200).json({ errors: [{ message: ex.message }] });
   }

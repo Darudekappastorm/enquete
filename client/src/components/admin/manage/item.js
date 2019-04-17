@@ -129,7 +129,7 @@ function DetailedExpansionPanel(props) {
             color="primary"
             className={classes.button}
             disabled={completed === 0 ? true : false}
-            onClick={e => getPollResults(id)}
+            onClick={e => getPollResults(id, admin.token)}
           >
             Results
           </Button>
@@ -147,7 +147,15 @@ function DetailedExpansionPanel(props) {
           <Button
             size="small"
             color="secondary"
-            onClick={e => deletePollAndResults(id, admin.token)}
+            onClick={e => {
+              if (
+                window.confirm(
+                  "Are you sure you want to delete this poll and all the results?"
+                )
+              ) {
+                deletePollAndResults(id, admin.token);
+              }
+            }}
           >
             Delete
           </Button>

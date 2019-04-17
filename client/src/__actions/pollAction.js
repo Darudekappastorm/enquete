@@ -182,13 +182,13 @@ export const setPollStatus = (id, command, userToken) => dispatch => {
     });
 };
 
-export const getPollResults = id => dispatch => {
+export const getPollResults = (id, userToken) => dispatch => {
   dispatch(setSnackbarMessage({ message: "Loading..." }));
   dispatch(setLoading({ isLoading: true }));
 
   return fetch("http://localhost:9000/api/admin/getPollResults", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", authorization: userToken },
     body: JSON.stringify({
       id: id
     })
@@ -197,7 +197,8 @@ export const getPollResults = id => dispatch => {
     .then(data => {
       dispatch(setLoading({ isLoading: false }));
       if (data.errors) {
-        return console.log(data.errors);
+        dispatch(setSnackbarMessage({ message: data.errors[0].message }));
+        return;
       }
       dispatch({
         type: SET_RESULTS,

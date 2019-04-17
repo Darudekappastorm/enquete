@@ -6,6 +6,10 @@ module.exports = mongoose.model(
     name: String,
     questions: Array,
     status: String,
-    completed: Number
+    completed: Number,
+    date: {
+      type: Date,
+      default: Date.now
+    }
   })
 );
